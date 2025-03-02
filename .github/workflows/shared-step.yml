@@ -19,5 +19,6 @@ jobs:
           node-version-file: .nvmrc
       - uses: actions/cache/restore@v4
         with:
+          path: node_modules
           key: ${{ github.run_id }}-${{ github.run_number }}
       - run: ${{ inputs.command }}
