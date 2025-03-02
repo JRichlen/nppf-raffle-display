@@ -1,0 +1,87 @@
+name: Features to Issues
+# This workflow is triggered manually via the GitHub Actions UI
+# It creates issues in the repository and adds them to the project backlog
+# I generate the issues using ChatGpt or GitHub Copilot locally, push them to keep a record,
+# and then run this workflow to create them in the repository.
+# The issues are added to the project backlog for tracking and prioritization.
+# This is an experiment to partially automate the issue creation process and use ChatGpt to assist with story definition.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/features.yml'
+      - 'features/**'
+
+jobs:
+  set-features:
+    runs-on: ubuntu-latest
+    outputs:
+      feature_files: ${{ steps.set-features.outputs.feature_files }}
+      feature_titles: ${{ steps.set-features.outputs.feature_titles }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set Features
+        id: set-features
+        run: |
+          # Find all files in the features directory
+          FILES=$(find ./features -type f -name "*.md" | jq -R -s -c 'split("\n")[:-1]')
+          echo "feature_files=$FILES" >> $GITHUB_OUTPUT
+          echo "Found feature files: $FILES"
+  features-to-issues:
+    strategy:
+      matrix:
+        feature: ${{fromJson(needs.set-features.outputs.feature_files)}}
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    needs: set-features
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract Title
+        id: extract-title
+        run: |
+          FILENAME=$(basename "${{ matrix.feature }}" .md)
+          TITLE=$(echo "$FILENAME" | sed 's/-/ /g')
+          echo "feature_title=$TITLE" >> $GITHUB_OUTPUT
+          echo "Extracted title: $TITLE"
+      - name: Check if Issue Exists By Title Using GitHub CLI
+        id: check-issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Capture the feature title from the previous step’s output.
+          # Retrieve the issues and filter for the one with a matching title.
+          ISSUE_NUMBER=$(gh issue list --json title,number --search "${{ steps.extract-title.outputs.feature_title }}" --state all | jq -r --arg title "${{ steps.extract-title.outputs.feature_title }}" '.[] | select(.title == $title) | .number')
+          
+          # Optionally, print the found issue number.
+          echo "Found issue number: $ISSUE_NUMBER"
+          
+          # Set the output so later steps can use it.
+          echo "issue_number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
+      - name: Create Issue
+        uses: peter-evans/create-issue-from-file@v5
+        if: steps.check-issue.outputs.issue_number == ''
+        with:
+          title: ${{ steps.extract-title.outputs.feature_title }}
+          content-filepath: "${{ matrix.feature }}"
+          labels: |
+            "enhancement"
+          assignees: "jrichlen"
+          token: ${{ github.token }}
+  add-to-project:
+    runs-on: ubuntu-latest
+    needs: features-to-issues
+    permissions:
+      issues: read
+      repository-projects: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/add-to-project@v1.0.2
+        with:
+          project-url: https://github.com/users/JRichlen/projects/1
+          labeled: enhancement, bug
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      
