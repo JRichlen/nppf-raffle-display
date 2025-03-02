@@ -30,6 +30,10 @@ jobs:
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     needs: [build, test, lint]
     environment:
       name: github-pages
