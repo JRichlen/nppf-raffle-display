@@ -15,8 +15,71 @@ describe('Raffle Admin Page', () => {
         cy.contains('h1', 'Raffle Management').should('be.visible');
     });
     
+    // New test for sidebar navigation
+    it('should have a sidebar with navigation options', () => {
+        // Check sidebar is visible
+        cy.contains('Raffle Admin').should('be.visible');
+        
+        // Check all navigation items exist
+        cy.contains('Winners').should('be.visible');
+        cy.contains('Metrics').should('be.visible');
+        cy.contains('Settings').should('be.visible');
+    });
+    
+    // New test for navigating between sections using sidebar
+    it('should navigate between sections when clicking sidebar items', () => {
+        // Should start with Winners section visible
+        cy.contains('Raffle Winners').should('be.visible');
+        
+        // Navigate to Metrics section
+        cy.contains('Metrics').click();
+        cy.contains('Raffle Metrics Dashboard').should('be.visible');
+        cy.contains('Raffle Winners').should('not.exist');
+        
+        // Navigate to Settings section
+        cy.contains('Settings').click();
+        cy.contains('Raffle Settings').should('be.visible');
+        cy.contains('Raffle Metrics Dashboard').should('not.exist');
+        
+        // Go back to Winners section
+        cy.contains('Winners').click();
+        cy.contains('Raffle Winners').should('be.visible');
+        cy.contains('Raffle Settings').should('not.exist');
+    });
+    
+    // New test for Metrics section content
+    it('should display the metrics dashboard section', () => {
+        cy.contains('Metrics').click();
+        cy.contains('Raffle Metrics Dashboard').should('be.visible');
+        cy.contains('Metrics dashboard content will be displayed here').should('be.visible');
+    });
+    
+    // New test for Settings section content
+    it('should display the settings section', () => {
+        cy.contains('Settings').click();
+        cy.contains('Raffle Settings').should('be.visible');
+        cy.contains('Settings configuration options will be displayed here').should('be.visible');
+    });
+    
+    // Check that selected navigation item is highlighted
+    it('should highlight the active navigation item in the sidebar', () => {
+        // Winners should be selected by default
+        cy.contains('[data-cy=nav-Winners]', 'Winners').should('have.class', 'Mui-selected');
+        
+        // Click on Metrics and verify it becomes selected
+        cy.contains('Metrics').click();
+        cy.contains('[data-cy=nav-Metrics]', 'Metrics').should('have.class', 'Mui-selected');
+        cy.contains('[data-cy=nav-Winners]', 'Winners').should('not.have.class', 'Mui-selected');
+        
+        // Click on Settings and verify it becomes selected
+        cy.contains('Settings').click();
+        cy.contains('[data-cy=nav-Settings]', 'Settings').should('have.class', 'Mui-selected');
+        cy.contains('[data-cy=nav-Metrics]', 'Metrics').should('not.have.class', 'Mui-selected');
+    });
+    
     it('should display the winners table with correct columns', () => {
-        cy.contains('Winners List').should('be.visible');
+        // Make sure we're on the Winners section
+        cy.contains('Winners').click();
         
         // Check table headers
         cy.get('table th').eq(1).should('contain', 'Winner ID');

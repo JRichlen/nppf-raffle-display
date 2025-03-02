@@ -7,7 +7,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   Box,
   TableSortLabel,
 } from "@mui/material";
@@ -88,9 +87,6 @@ const RaffleWinnersTable: React.FC = () => {
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-        <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 1 }}>
-          Winners List
-        </Typography>
         <RaffleWinnersResetButton />
       </Box>
 
