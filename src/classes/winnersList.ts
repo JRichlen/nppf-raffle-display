@@ -7,14 +7,24 @@ import { ClaimSource } from "../types/claim";
 import { logger } from "../utilities/logger";
 
 export class WinnersList extends Array<Winner> {
-  constructor(winners: Winner[] | WinnersList = []) {
+    constructor(winners: Winner[] | WinnersList = []) {
     super();
     if (winners && Array.isArray(winners)) {
       winners.forEach(winner => {
+        const prizes = new PrizeList(...winner.prizes.map(prize => ({
+          ...prize,
+          timestamp: prize.timestamp instanceof Date ? prize.timestamp : new Date(prize.timestamp)
+        })));
+        
+        const claims = new ClaimList(...winner.claims.map(claim => ({
+          ...claim,
+          timestamp: claim.timestamp instanceof Date ? claim.timestamp : new Date(claim.timestamp)
+        })));
+        
         this.push({
           ...winner,
-          prizes: new PrizeList(...winner.prizes),
-          claims: new ClaimList(...winner.claims)
+          prizes,
+          claims
         });
       });
     }
@@ -116,5 +126,9 @@ export class WinnersList extends Array<Winner> {
     logger.debug(`Claiming single prize ID: ${prizeId}`);
     winner.claims.addClaim([prizeId], source);
     logger.info(`Single claim recorded successfully for ${winner.name}`);
+  }
+
+  toJSON() {
+    return Array.from(this);
   }
 }

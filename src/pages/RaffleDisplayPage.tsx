@@ -1,13 +1,13 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
-import RaffleWinnersGrid from './RaffleWinnersGrid';
-import RaffleWinnerInput from './RaffleWinnerInput';
+import RaffleWinnersGrid from '../components/RaffleWinnersGrid';
+import RaffleWinnerInput from '../components/RaffleWinnerInput';
 
 interface RaffleDisplayProps {
   title?: string;
 }
 
-const RaffleDisplay: React.FC<RaffleDisplayProps> = ({
+const RaffleDisplayPage: React.FC<RaffleDisplayProps> = ({
   title = "Raffle Winners",
 }) => {
   return (
@@ -55,4 +55,4 @@ const RaffleDisplay: React.FC<RaffleDisplayProps> = ({
   );
 };
 
-export default RaffleDisplay;
+export default RaffleDisplayPage;

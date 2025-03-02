@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StorageContext } from '../contexts/StorageContext';
 
-export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const StorageContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [storage, setStorage] = useState<Storage>(localStorage);
 
   const getItem = (key: string): string | null => {

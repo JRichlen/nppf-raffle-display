@@ -1,9 +1,9 @@
 import { CssBaseline, ThemeProvider, Box } from "@mui/material";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import RaffleDisplay from "./components/RaffleDisplay";
+import RaffleDisplayPage from "./pages/RaffleDisplayPage";
 import AdminPage from "./pages/AdminPage";
 import { RaffleContextProvider } from "./providers/RaffleContextProvider";
-import { StorageProvider } from "./providers/StorageContextProvider";
+import { StorageContextProvider } from "./providers/StorageContextProvider";
 import { WinnersList } from "./classes/winnersList";
 import { theme } from "./theme";
 import { NavigationToggle } from "./components/NavigationToggle";
@@ -12,7 +12,7 @@ function App() {
   const winnersList = new WinnersList();
 
   return (
-    <StorageProvider>
+    <StorageContextProvider>
       <RaffleContextProvider winnersList={winnersList}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -23,7 +23,7 @@ function App() {
                 <Route path="/admin" element={<AdminPage />} />
                 <Route
                   path="/display"
-                  element={<RaffleDisplay title="General Raffle Winners" />}
+                  element={<RaffleDisplayPage title="General Raffle Winners" />}
                 />
               </Routes>
               <NavigationToggle />
@@ -31,7 +31,7 @@ function App() {
           </BrowserRouter>
         </ThemeProvider>
       </RaffleContextProvider>
-    </StorageProvider>
+    </StorageContextProvider>
   );
 }
 
