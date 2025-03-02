@@ -67,8 +67,7 @@ jobs:
         with:
           title: ${{ steps.extract-title.outputs.feature_title }}
           content-filepath: "${{ matrix.feature }}"
-          labels: |
-            "enhancement"
+          labels: enhancement
           assignees: "jrichlen"
           token: ${{ secrets.PAT_GITHUB }}
   
