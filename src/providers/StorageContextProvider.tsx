@@ -14,13 +14,8 @@ export const StorageContextProvider: React.FC<{ children: React.ReactNode }> = (
     setStorage(localStorage);
   };
 
-  const removeItem = (key: string): void => {
-    storage.removeItem(key);
-    setStorage(localStorage);
-  };
-
   return (
-    <StorageContext.Provider value={{ getItem, setItem, removeItem }}>
+    <StorageContext.Provider value={{ getItem, setItem }}>
       {children}
     </StorageContext.Provider>
   );

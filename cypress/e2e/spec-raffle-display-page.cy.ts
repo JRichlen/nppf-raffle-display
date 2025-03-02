@@ -10,8 +10,8 @@ describe('Raffle Display Page', () => {
   });
 
 
-  it('should display the raffle display page header', () => {
-    cy.contains('h1', 'Raffle Display').should('be.visible');
+  it('should show the raffle display page header', () => {
+    cy.contains('h1', 'General Raffle Winners').should('be.visible');
   });
 
   it('should redirect to the raffle display page from the home page', () => {

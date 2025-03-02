@@ -11,7 +11,7 @@ describe('Raffle Admin Page', () => {
         cy.visit('/admin');
     });
     
-    it('should display the admin page header', () => {
+    it('should show the admin page header', () => {
         cy.contains('h1', 'Raffle Management').should('be.visible');
     });
     

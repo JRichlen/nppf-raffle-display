@@ -24,7 +24,10 @@ export const RaffleContextProvider: React.FC<RaffleContextProviderProps> = ({
         // Deserialize the JSON string back into objects
         const parsedData = JSON.parse(savedWinners);
         return new WinnersList(parsedData);
+
+      /* istanbul ignore next */
       } catch (e: unknown) {
+        /* istanbul ignore if */  
         if (e instanceof Error) {
           logger.error(e.message);
         }

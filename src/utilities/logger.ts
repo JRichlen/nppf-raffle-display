@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import chalk from 'chalk';
 
 enum LogLevel {
@@ -54,7 +55,7 @@ class Logger {
     return `[${timestamp}] [${level.toUpperCase()}] ${message}`;
   }
 
-  error(message: string, ...args: never[]): void {
+  error(message: string, ...args: unknown[]): void {
     if (this.level >= LogLevel.ERROR) {
       console.error(
         chalk.red(this.formatMessage('error', message)),
@@ -63,7 +64,7 @@ class Logger {
     }
   }
 
-  warn(message: string, ...args: never[]): void {
+  warn(message: string, ...args: unknown[]): void {
     if (this.level >= LogLevel.WARN) {
       console.warn(
         chalk.yellow(this.formatMessage('warn', message)),

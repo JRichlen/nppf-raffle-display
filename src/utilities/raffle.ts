@@ -33,8 +33,3 @@ export function getUnclaimedPrizes(winner: Winner): Array<Prize> {
 export function getWinnersWithUnclaimedPrizes(winners: Array<Winner>): Array<Winner> {
   return winners.filter(winner => getUnclaimedPrizes(winner).length);
 }
-
-// Add a function to clear the cache if needed
-export function clearRaffleCaches(): void {
-  unclaimedPrizesCache.clear();
-}
