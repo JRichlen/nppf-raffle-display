@@ -1,12 +1,13 @@
 {
   "name": "nppf-raffle-display",
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "test": "echo \"Warning: no tests yet\" && exit 0",
+    "test": "start-server-and-test dev http://localhost:5173 cy:run",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -28,10 +29,13 @@
     "@types/react-dom": "^19.0.4",
     "@types/uuid": "^9.0.7",
     "@vitejs/plugin-react-swc": "^3.8.0",
+    "cypress": "^14.1.0",
+    "cypress-localstorage-commands": "^2.2.7",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "start-server-and-test": "^2.0.10",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"

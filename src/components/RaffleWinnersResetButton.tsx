@@ -66,7 +66,12 @@ const RaffleWinnersResetButton: React.FC<RaffleWinnersResetButtonProps> = ({
           <Button onClick={handleResetClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleResetConfirm} color="error" autoFocus>
+          <Button 
+            onClick={handleResetConfirm} 
+            color="error" 
+            autoFocus
+            data-testid="confirm-reset-button"
+          >
             Reset
           </Button>
         </DialogActions>

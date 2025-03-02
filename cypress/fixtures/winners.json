@@ -1,0 +1,100 @@
+[
+  {
+    "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+    "name": "John Smith",
+    "prizes": [
+      {
+        "id": "prize-123",
+        "timestamp": "2023-05-15T14:30:00.000Z"
+      },
+      {
+        "id": "prize-456",
+        "timestamp": "2023-05-15T16:45:00.000Z"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-123",
+        "timestamp": "2023-05-15T15:00:00.000Z",
+        "prizeIds": ["prize-123"],
+        "source": "DISPLAY"
+      }
+    ]
+  },
+  {
+    "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "name": "Jane Doe",
+    "prizes": [
+      {
+        "id": "prize-789",
+        "timestamp": "2023-05-16T10:15:00.000Z"
+      }
+    ],
+    "claims": []
+  },
+  {
+    "id": "a8098c1a-f86e-11da-bd1a-00112444be1e",
+    "name": "Bob Johnson",
+    "prizes": [
+      {
+        "id": "prize-101",
+        "timestamp": "2023-05-14T09:30:00.000Z"
+      },
+      {
+        "id": "prize-102",
+        "timestamp": "2023-05-16T11:45:00.000Z"
+      },
+      {
+        "id": "prize-103",
+        "timestamp": "2023-05-17T13:20:00.000Z"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-101",
+        "timestamp": "2023-05-14T10:00:00.000Z",
+        "prizeIds": ["prize-101"],
+        "source": "DISPLAY"
+      },
+      {
+        "id": "claim-102",
+        "timestamp": "2023-05-16T12:30:00.000Z",
+        "prizeIds": ["prize-102"],
+        "source": "ADMIN"
+      }
+    ]
+  },
+  {
+    "id": "bdc06a0e-8983-4b97-ab7d-e2b3f2d5eed7",
+    "name": "Sarah Wilson",
+    "prizes": [
+      {
+        "id": "prize-104",
+        "timestamp": "2023-05-18T14:10:00.000Z"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-104",
+        "timestamp": "2023-05-18T14:30:00.000Z",
+        "prizeIds": ["prize-104"],
+        "source": "ADMIN"
+      }
+    ]
+  },
+  {
+    "id": "c2d10c8e-f2ad-4545-a571-1516e16dee34",
+    "name": "Michael Brown",
+    "prizes": [
+      {
+        "id": "prize-105",
+        "timestamp": "2023-05-19T09:00:00.000Z"
+      },
+      {
+        "id": "prize-106",
+        "timestamp": "2023-05-19T15:20:00.000Z"
+      }
+    ],
+    "claims": []
+  }
+]

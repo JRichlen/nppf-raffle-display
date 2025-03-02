@@ -4,11 +4,11 @@ import RaffleWinnersGrid from '../components/RaffleWinnersGrid';
 import RaffleWinnerInput from '../components/RaffleWinnerInput';
 
 interface RaffleDisplayProps {
-  title?: string;
+  title: string;
 }
 
 const RaffleDisplayPage: React.FC<RaffleDisplayProps> = ({
-  title = "Raffle Winners",
+  title
 }) => {
   return (
     <Box

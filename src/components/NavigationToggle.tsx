@@ -21,6 +21,7 @@ export const NavigationToggle = () => {
         color={isAdminPage ? "secondary" : "primary"}
         aria-label="toggle view"
         onClick={toggleView}
+        data-cy={isAdminPage ? "display-toggle" : "admin-toggle"}
         sx={{
           position: 'fixed',
           top: 16,
