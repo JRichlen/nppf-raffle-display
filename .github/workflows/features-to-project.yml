@@ -16,5 +16,4 @@ jobs:
       - uses: actions/add-to-project@v1.0.2
         with:
           project-url: https://github.com/users/JRichlen/projects/1
-          labeled: enhancement, bug
           github-token: ${{ secrets.GITHUB_TOKEN }}
