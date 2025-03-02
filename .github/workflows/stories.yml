@@ -25,9 +25,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -e
-          trap 'echo "ERROR: Command failed with exit code $?"' ERR
-
           REPO="JRichlen/nppf-raffle-display"
           PROJECT="1"  # GitHub Project backlog (https://github.com/users/JRichlen/projects/1)
 
