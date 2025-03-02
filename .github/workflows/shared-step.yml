@@ -10,6 +10,7 @@ on:
 
 jobs:
   run-command:
+    name: ${{ inputs.command }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
