@@ -33,3 +33,23 @@ export function getUnclaimedPrizes(winner: Winner): Array<Prize> {
 export function getWinnersWithUnclaimedPrizes(winners: Array<Winner>): Array<Winner> {
   return winners.filter(winner => getUnclaimedPrizes(winner).length);
 }
+
+export function getTotalPrizes(winners: Array<Winner>): number {
+  return winners.reduce((total, winner) => total + winner.prizes.length, 0);
+}
+
+export function getTotalClaims(winners: Array<Winner>): number {
+  return winners.reduce((total, winner) => 
+    total + winner.claims.reduce((claimTotal, claim) => claimTotal + claim.prizeIds.length, 0), 
+  0);
+}
+
+export function getTotalUnclaimed(winners: Array<Winner>): number {
+  return winners.reduce((total, winner) => 
+    total + getUnclaimedPrizes(winner).length, 
+  0);
+}
+
+export function getUniqueWinnersCount(winners: Array<Winner>): number {
+  return winners.length;
+}

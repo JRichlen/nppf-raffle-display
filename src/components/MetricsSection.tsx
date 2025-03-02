@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import { MetricsCounters } from "./metrics/MetricsCounters";
 
 const MetricsSection: React.FC = () => {
   return (
@@ -7,9 +8,7 @@ const MetricsSection: React.FC = () => {
       <Typography variant="h5" component="h2" gutterBottom>
         Raffle Metrics Dashboard
       </Typography>
-      <Typography variant="body1">
-        Metrics dashboard content will be displayed here.
-      </Typography>
+      <MetricsCounters />
     </Box>
   );
 };
