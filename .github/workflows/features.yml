@@ -70,6 +70,6 @@ jobs:
           labels: |
             "enhancement"
           assignees: "jrichlen"
-          token: ${{ github.token }}
+          token: ${{ secrets.PAT_GITHUB }}
   
       
