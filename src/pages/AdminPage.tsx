@@ -10,7 +10,6 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-  styled,
 } from "@mui/material";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -28,19 +27,6 @@ enum AdminView {
 
 // Sidebar width
 const drawerWidth = 240;
-
-// Create styled component for the main content
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
-  open?: boolean;
-}>(({ theme }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  marginLeft: drawerWidth,
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-}));
 
 const AdminPage: React.FC = () => {
   // State to track the active view
