@@ -71,17 +71,5 @@ jobs:
             "enhancement"
           assignees: "jrichlen"
           token: ${{ github.token }}
-  add-to-project:
-    runs-on: ubuntu-latest
-    needs: features-to-issues
-    permissions:
-      issues: read
-      repository-projects: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/add-to-project@v1.0.2
-        with:
-          project-url: https://github.com/users/JRichlen/projects/1
-          labeled: enhancement, bug
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+  
       
