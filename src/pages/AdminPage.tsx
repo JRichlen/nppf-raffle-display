@@ -99,6 +99,7 @@ const AdminPage: React.FC = () => {
               <ListItemButton 
                 selected={activeView === view}
                 onClick={() => setActiveView(view)}
+                data-cy={`nav-${view}`}
               >
                 <ListItemIcon>
                   {getNavIcon(view)}
