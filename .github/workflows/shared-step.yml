@@ -1,0 +1,23 @@
+name: Shared Node Step
+
+on:
+  workflow_call:
+    inputs:
+      command:
+        required: true
+        type: string
+        description: 'Terminal command to run'
+
+jobs:
+  run-command:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - uses: actions/cache/restore@v4
+        with:
+          key: ${{ github.run_id }}-${{ github.run_number }}
+      - run: ${{ inputs.command }}

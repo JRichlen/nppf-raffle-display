@@ -1,0 +1,29 @@
+name: Pipeline
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  install:
+    uses: ./.github/workflows/install-step.yml
+
+  test:
+    uses: ./.github/workflows/shared-step.yml
+    needs: install
+    with:
+      command: npm test
+
+  lint:
+    uses: ./.github/workflows/shared-step.yml
+    needs: install
+    with:
+      command: npm run lint
+
+  build:
+    uses: ./.github/workflows/shared-step.yml
+    needs: install
+    with:
+      command: npm run build
