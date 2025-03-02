@@ -109,10 +109,7 @@ const AdminPage: React.FC = () => {
           ))}
         </List>
       </Drawer>
-      
-      {/* Main content area */}
-      <Main>
-        <Container maxWidth="lg">
+        <Container>
           <Box sx={{ my: 4 }}>
             <Typography variant="h4" component="h1" gutterBottom>
               Raffle Management
@@ -122,7 +119,6 @@ const AdminPage: React.FC = () => {
             </Box>
           </Box>
         </Container>
-      </Main>
     </Box>
   );
 };
