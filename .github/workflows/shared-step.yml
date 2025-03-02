@@ -24,3 +24,7 @@ jobs:
             /home/runner/.cache/Cypress
           key: ${{ github.run_id }}-${{ github.run_number }}
       - run: ${{ inputs.command }}
+      - if: ${{ inputs.command == 'npm run build' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
