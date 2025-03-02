@@ -22,3 +22,9 @@ jobs:
           path: node_modules
           key: ${{ github.run_id }}-${{ github.run_number }}
       - run: ${{ inputs.command }}
+      - if: ${{ inputs.command == 'npm run build' }}
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: dist
