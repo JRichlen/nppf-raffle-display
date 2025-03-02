@@ -4,7 +4,7 @@
   "scripts": {
     "cov:open": "open coverage/lcov-report/index.html",
     "cov:report": "npx nyc report --reporter=text-summary",
-    "cy:run": "cypress install && cypress run",
+    "cy:run": "cypress run",
     "cy:open": "cypress open",
     "dev": "vite",
     "build": "tsc -b && vite build",

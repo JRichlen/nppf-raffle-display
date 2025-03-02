@@ -19,6 +19,8 @@ jobs:
           node-version-file: .nvmrc
       - uses: actions/cache/restore@v4
         with:
-          path: node_modules
+          path: |
+            node_modules
+            /home/runner/.cache/Cypress
           key: ${{ github.run_id }}-${{ github.run_number }}
       - run: ${{ inputs.command }}
