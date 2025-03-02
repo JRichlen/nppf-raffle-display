@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { MetricsCounters } from "./metrics/MetricsCounters";
+import { TimeSeriesChart } from "./metrics/TimeSeriesChart";
 
 const MetricsSection: React.FC = () => {
   return (
@@ -9,6 +10,9 @@ const MetricsSection: React.FC = () => {
         Raffle Metrics Dashboard
       </Typography>
       <MetricsCounters />
+      <Box sx={{ mt: 4 }}>
+        <TimeSeriesChart />
+      </Box>
     </Box>
   );
 };
