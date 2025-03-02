@@ -5,6 +5,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/**'
+      - 'cypress/**'
+      - '.github/workflows/pipeline.yml'
+      - '*'  # Files in root directory only
 
 jobs:
   install:
