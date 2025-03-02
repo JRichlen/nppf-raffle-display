@@ -211,4 +211,158 @@ describe('Raffle Admin Page', () => {
         // Verify we're back on the admin page
         cy.url().should('include', '/admin');
     });
+
+    it('should filter winners by search term', () => {
+        // Get count of initial winners
+        cy.get('table tbody tr').then(($rows) => {
+            const initialCount = $rows.length;
+            
+            // Type a search term that should match at least one winner
+            cy.get('[data-cy=search-input] input').type('John');
+            
+            // Check that we have fewer rows than before
+            cy.get('table tbody tr').should(($newRows) => {
+                expect($newRows.length).to.be.lessThan(initialCount);
+                expect($newRows.length).to.be.greaterThan(0);
+            });
+
+            cy.wait(300);
+            
+            // Check that all visible rows contain the search term
+            cy.get('[data-cy=winner-name]').each(($cell) => {
+                cy.wrap($cell).should('contain.text', 'John');
+            });
+            
+            // Clear the search field
+            cy.get('[data-cy=search-input] input').clear();
+            
+            // Check that we have the original number of rows again
+            cy.get('table tbody tr').should('have.length', initialCount);
+        });
+    });
+    
+    it('should show "No matching winners found" when search has no results', () => {
+        // Type a search term that definitely won't match
+        cy.get('[data-cy=search-input] input').type('XYZ123NonExistentName');
+        
+        // Should show no matching winners message
+        cy.contains('No matching winners found').should('be.visible');
+        
+        // Clear the search field
+        cy.get('[data-cy=search-input] input').clear();
+        
+        // Message should disappear and winners should be visible again
+        cy.contains('No matching winners found').should('not.exist');
+        cy.get('table tbody tr').should('have.length.at.least', 1);
+    });
+    
+    it('should filter winners by claiming status', () => {
+        // Initial state should show all winners
+        cy.get('[data-cy=primary-row]').then(($allRows) => {
+            const allRowsCount = $allRows.length;
+            
+            // Select "All Claimed" filter
+            cy.get('[data-cy=status-filter]').click();
+            cy.get('li').contains('All Claimed').click();
+            
+            // Verify each visible row shows "All Claimed" chip
+            cy.get('[data-cy=primary-row]').then(($claimedRows) => {
+                const claimedCount = $claimedRows.length;
+                for (let i = 0; i < $claimedRows.length; i++) {
+                    const $row = $claimedRows[i];
+                    cy.wrap($row).find('div.MuiChip-colorSuccess').should('contain', 'All Claimed');
+                }
+
+                // Select "Has Unclaimed" filter
+                cy.get('[data-cy=status-filter]').click();
+                cy.get('li').contains('Has Unclaimed').click();
+                
+                // Verify each visible row shows "Has Unclaimed" chip
+                cy.get('[data-cy=primary-row]').then(($unclaimedRows) => {
+                    const unclaimedCount = $unclaimedRows.length;
+                    for (let i = 0; i < $unclaimedRows.length; i++) {
+                        const $row = $unclaimedRows[i];
+                        cy.wrap($row).find('div.MuiChip-colorWarning').should('contain', 'Unclaimed');
+                    }
+
+                     // The sum of claimed and unclaimed should equal all rows
+                    expect(claimedCount + unclaimedCount).to.equal(allRowsCount);
+                });
+            });
+                  
+            // Return to "All" filter
+            cy.get('[data-cy=status-filter]').click();
+            cy.get('li').contains('All').click();
+            
+            // Should have the same count as initially
+            cy.get('[data-cy=primary-row]').should('have.length', allRowsCount);
+        });
+    });
+    
+    it('should sort the winners table', () => {
+        // Test sorting by name ascending
+        cy.contains('th', 'Name').click();
+        
+        // Get all names in ascending order
+        cy.get('table tbody tr td:nth-child(3)').then($cells => {
+            const namesAsc = Array.from($cells).map(cell => cell.textContent);
+            
+            // Click again to sort descending
+            cy.contains('th', 'Name').click();
+            
+            // Get all names in descending order
+            cy.get('table tbody tr td:nth-child(3)').then($cellsDesc => {
+                const namesDesc = Array.from($cellsDesc).map(cell => cell.textContent);
+                
+                // Descending should be reverse of ascending
+                expect(namesDesc).to.deep.equal([...namesAsc].reverse());
+            });
+        });
+        
+        // Test sorting by prize count
+        cy.contains('th', 'Prizes Count').click();
+        
+        // Get all prize counts in ascending order
+        cy.get('table tbody tr td:nth-child(4)').then($cells => {
+            const countsAsc = Array.from($cells).map(cell => parseInt(cell.textContent || '0', 10));
+            
+            // Verify ascending order
+            for (let i = 0; i < countsAsc.length - 1; i++) {
+                expect(countsAsc[i]).to.be.at.most(countsAsc[i + 1]);
+            }
+            
+            // Click again to sort descending
+            cy.contains('th', 'Prizes Count').click();
+            
+            // Get all prize counts in descending order
+            cy.get('table tbody tr td:nth-child(4)').then($cellsDesc => {
+                const countsDesc = Array.from($cellsDesc).map(cell => parseInt(cell.textContent || '0', 10));
+                
+                // Verify descending order
+                for (let i = 0; i < countsDesc.length - 1; i++) {
+                    expect(countsDesc[i]).to.be.at.least(countsDesc[i + 1]);
+                }
+            });
+        });
+    });
+    
+    it('should combine search and filter functionality', () => {
+        // Type a search term
+        cy.get('[data-cy=search-input] input').type('John');
+        
+        // Apply a status filter
+        cy.get('[data-cy=status-filter]').click();
+        cy.contains('Has Unclaimed').click();
+        
+        // Check that the results are filtered by both criteria
+        cy.get('[data-cy=primary-row]').each(($row) => {
+            cy.wrap($row).should('contain.text', 'John');
+            cy.wrap($row).find('div.MuiChip-colorWarning').should('contain', 'Unclaimed');
+        });
+        
+        // Clear the filters
+        cy.get('[data-cy=search-input] input').clear();
+        cy.get('[data-cy=status-filter]').click();
+        cy.get('li').contains('All').click();
+    });
 });

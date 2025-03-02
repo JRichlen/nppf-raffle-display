@@ -76,6 +76,7 @@ const RaffleWinnerInput: React.FC = () => {
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ width: '100%' }}>
         <Stack direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
           <Autocomplete
+            data-cy="winner-input"
             fullWidth
             freeSolo
             value={winnerName}

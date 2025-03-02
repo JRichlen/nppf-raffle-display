@@ -89,7 +89,7 @@ describe('Raffle Display Page', () => {
     
     // Since we don't know exactly what's on the admin page yet, 
     // we'll just verify we're not seeing display page elements
-    cy.get('input').should('not.exist');
+    cy.get('[data-cy=winner-input]').should('not.exist');
     cy.contains('button', 'Enter').should('not.exist');
     
     // Toggle back to display mode

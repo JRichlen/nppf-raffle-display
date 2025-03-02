@@ -36,14 +36,19 @@ const RaffleWinnerTableRow: React.FC<RaffleWinnerTableRowProps> = ({ winner }) =
 
   return (
     <>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow 
+        sx={{ "& > *": { borderBottom: "unset" } }}
+        data-cy={`primary-row`}
+        >
         <TableCell>
           <IconButton size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
         <TableCell>{winner.id}</TableCell>
-        <TableCell>{winner.name || "Not recorded"}</TableCell>
+        <TableCell
+          data-cy={`winner-name`}
+        >{winner.name || "Not recorded"}</TableCell>
         <TableCell>{winner.prizes.length || 0}</TableCell>
         <TableCell>
           <Chip

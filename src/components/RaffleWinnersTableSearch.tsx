@@ -37,6 +37,7 @@ const RaffleWinnersTableSearch: React.FC<RaffleWinnersTableSearchProps> = ({
         value={searchTerm}
         onChange={(e) => onSearchChange(e.target.value)}
         sx={{ flexGrow: 1 }}
+        data-cy="search-input"
       />
       <FormControl sx={{ minWidth: 150 }} size="small">
         <InputLabel id="status-filter-label">Status</InputLabel>
@@ -45,6 +46,7 @@ const RaffleWinnersTableSearch: React.FC<RaffleWinnersTableSearchProps> = ({
           value={statusFilter}
           label="Status"
           onChange={handleStatusChange}
+          data-cy="status-filter"
         >
           <MenuItem value="all">All</MenuItem>
           <MenuItem value="claimed">All Claimed</MenuItem>
