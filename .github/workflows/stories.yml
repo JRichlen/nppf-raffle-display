@@ -1,4 +1,10 @@
-name: Create Admin Panel Expansion Issues
+name: Generate User Stories
+# This workflow is triggered manually via the GitHub Actions UI
+# It creates issues in the repository and adds them to the project backlog
+# I generate the issues using ChatGpt or GitHub Copilot locally, push them to keep a record, 
+# and then run this workflow to create them in the repository. 
+# The issues are added to the project backlog for tracking and prioritization.
+# This is an experiment to partially automate the issue creation process and use ChatGpt to assist with story definition.
 
 on:
   workflow_dispatch:
