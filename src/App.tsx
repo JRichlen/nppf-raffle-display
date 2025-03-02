@@ -39,7 +39,7 @@ function App() {
       <RaffleContextProvider winnersList={winnersList}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <BrowserRouter>
+          <BrowserRouter basename="/nppf-raffle-display">
             <Routes>
               <Route path="/" element={<Navigate to="/display" />} />
               <Route path="/admin" element={<AdminPage />} />
