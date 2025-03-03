@@ -36,6 +36,23 @@ import { WinnersList } from "../classes/winnersList";
 import { PrizeList } from "../classes/prizesList";
 import { ClaimList } from "../classes/claimsList";
 import { Winner } from "../types/winner";
+import { ClaimSource } from "../types/claim";
+
+// Interface for the incoming JSON data structure
+interface WinnerData {
+  id: string;
+  name: string;
+  prizes: Array<{
+    id: string;
+    timestamp: string;
+  }>;
+  claims: Array<{
+    id: string;
+    timestamp: string;
+    prizeIds: string[];
+    source: string;
+  }>;
+}
 
 const SettingsSection: React.FC = () => {
   const { selectedTheme, setSelectedTheme, themeOptions } = useThemeContext();
@@ -51,12 +68,19 @@ const SettingsSection: React.FC = () => {
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const transformData = (data: any[]): Winner[] => {
+  const transformData = (data: WinnerData[]): Winner[] => {
     return data.map(winner => ({
       id: winner.id,
       name: winner.name,
-      prizes: new PrizeList(...(winner.prizes || [])),
-      claims: new ClaimList(...(winner.claims || []))
+      prizes: new PrizeList(...(winner.prizes || []).map(prize => ({
+        ...prize,
+        timestamp: new Date(prize.timestamp)
+      }))),
+      claims: new ClaimList(...(winner.claims || []).map(claim => ({
+        ...claim,
+        timestamp: new Date(claim.timestamp),
+        source: claim.source as ClaimSource
+      })))
     }));
   };
 
@@ -127,7 +151,7 @@ const SettingsSection: React.FC = () => {
       setConfirmDialogOpen(true);
       setLoadDialogOpen(false);
     } else {
-      const transformedData = transformData(sampleData);
+      const transformedData = transformData(sampleData as WinnerData[]);
       setWinners(new WinnersList(transformedData));
       handleCloseLoadDialog();
     }
@@ -143,7 +167,7 @@ const SettingsSection: React.FC = () => {
       if (pendingAction.type === 'file' && pendingAction.data) {
         setWinners(new WinnersList(pendingAction.data));
       } else if (pendingAction.type === 'sample') {
-        const transformedData = transformData(sampleData);
+        const transformedData = transformData(sampleData as WinnerData[]);
         setWinners(new WinnersList(transformedData));
       }
       setConfirmDialogOpen(false);
