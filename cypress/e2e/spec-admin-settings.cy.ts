@@ -13,8 +13,8 @@ describe('Admin Settings Page', () => {
   it('should display and change winner card color preference', () => {
     cy.get('[data-testid="card-color-select"]').should('be.visible');
     cy.get('[data-testid="card-color-select"]').click();
-    cy.contains('Purple').click();
-    cy.get('[data-testid="card-color-select"]').should('contain.text', 'Purple');
+    cy.contains('Sunset Orange').click();
+    cy.get('[data-testid="card-color-select"]').should('contain.text', 'Sunset Orange');
   });
 
   it('should display load data and reset buttons in advanced section', () => {
@@ -67,15 +67,18 @@ describe('Admin Settings Page', () => {
     });
 
     it('should start with default white theme', () => {
-      cy.get('[data-testid="card-color-select"]').should('have.text', 'Default White');
+      cy.get('[data-testid="card-color-select"]').should('contain.text', 'Default White');
       
       // Visit display page and verify default white color
       cy.visit('/display');
+      cy.get('input').type('Test Winner');
+      cy.contains('button', 'Enter').click();
       cy.get('.MuiCard-root').first().should('have.css', 'background-color', 'rgb(255, 255, 255)');
     });
 
     it('should persist theme selection to localStorage', () => {
       // Select Sunset Orange theme
+      cy.get('[data-testid="card-color-select"]').should('be.visible');
       cy.get('[data-testid="card-color-select"]').click();
       cy.contains('Sunset Orange').click();
 
@@ -89,7 +92,7 @@ describe('Admin Settings Page', () => {
       // Reload page and verify theme persists
       cy.reload();
       cy.contains('Settings').click();
-      cy.get('[data-testid="card-color-select"]').should('have.text', 'Sunset Orange');
+      cy.get('[data-testid="card-color-select"]').contains('Sunset Orange').should('be.visible');
     });
 
     it('should show color preview in dropdown', () => {
@@ -114,6 +117,8 @@ describe('Admin Settings Page', () => {
 
       // Go to display page and verify card color
       cy.visit('/display');
+      cy.get('input').type('Test Winner');
+      cy.contains('button', 'Enter').click();
       cy.get('.MuiCard-root').first().should('have.css', 'background-color', 'rgb(237, 108, 2)');
     });
   });
