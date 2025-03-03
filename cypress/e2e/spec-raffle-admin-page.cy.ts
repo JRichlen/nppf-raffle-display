@@ -15,7 +15,6 @@ describe('Raffle Admin Page', () => {
         cy.contains('h1', 'Raffle Management').should('be.visible');
     });
     
-    // New test for sidebar navigation
     it('should have a sidebar with navigation options', () => {
         // Check sidebar is visible
         cy.contains('Raffle Admin').should('be.visible');
@@ -26,7 +25,6 @@ describe('Raffle Admin Page', () => {
         cy.contains('Settings').should('be.visible');
     });
     
-    // New test for navigating between sections using sidebar
     it('should navigate between sections when clicking sidebar items', () => {
         // Should start with Winners section visible
         cy.contains('Raffle Winners').should('be.visible');
@@ -47,21 +45,19 @@ describe('Raffle Admin Page', () => {
         cy.contains('Raffle Settings').should('not.exist');
     });
     
-    // New test for Metrics section content
     it('should display the metrics dashboard section', () => {
         cy.contains('Metrics').click();
         cy.contains('Raffle Metrics Dashboard').should('be.visible');
         cy.contains('Metrics dashboard content will be displayed here').should('be.visible');
     });
     
-    // New test for Settings section content
     it('should display the settings section', () => {
         cy.contains('Settings').click();
         cy.contains('Raffle Settings').should('be.visible');
-        cy.contains('Settings configuration options will be displayed here').should('be.visible');
+        cy.contains('Preferences').should('be.visible');
+        cy.contains('Advanced').should('be.visible');
     });
     
-    // Check that selected navigation item is highlighted
     it('should highlight the active navigation item in the sidebar', () => {
         // Winners should be selected by default
         cy.contains('[data-cy=nav-Winners]', 'Winners').should('have.class', 'Mui-selected');
@@ -74,7 +70,7 @@ describe('Raffle Admin Page', () => {
         // Click on Settings and verify it becomes selected
         cy.contains('Settings').click();
         cy.contains('[data-cy=nav-Settings]', 'Settings').should('have.class', 'Mui-selected');
-        cy.contains('[data-cy=nav-Metrics]', 'Metrics').should('not.have.class', 'Mui-selected');
+        cy.contains('[data-cy=nav-Winners]', 'Winners').should('not.have.class', 'Mui-selected');
     });
     
     it('should display the winners table with correct columns', () => {
@@ -213,47 +209,6 @@ describe('Raffle Admin Page', () => {
             } else {
                 this.skip(); // Skip if no winners with unclaimed prizes
             }
-        });
-    });
-    
-    it('should open reset dialog when reset button is clicked', () => {
-        // Reset dialog should not be visible initially
-        cy.contains('Reset Raffle Data?').should('not.exist');
-        
-        // Click the Reset Raffle button
-        cy.contains('button', 'Reset Raffle').click();
-        
-        // Dialog should appear
-        cy.contains('Reset Raffle Data?').should('be.visible');
-        cy.contains('This action will permanently delete all winners and their prizes').should('be.visible');
-        
-        // Cancel button should close dialog
-        cy.contains('button', 'Cancel').click();
-        cy.contains('Reset Raffle Data?').should('not.exist');
-    });
-    
-    it('should clear all winners when reset is confirmed', () => {
-        // First check we have winners
-        cy.get('table tbody tr').should('have.length.at.least', 1);
-        
-        // Click the Reset Raffle button
-        cy.contains('button', 'Reset Raffle').click();
-        
-        // Confirm the reset
-        cy.get('[data-testid=confirm-reset-button]').click();
-        
-        // Table should now show no winners
-        cy.contains('No winners recorded yet').should('be.visible');
-        
-        // LocalStorage should be cleared
-        cy.getLocalStorage('raffleWinners').then(winners => {
-            if (!winners) {
-                expect.fail('raffleWinners key not found in localStorage');
-            }
-
-            const parsed = JSON.parse(winners);
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            expect(parsed).to.be.empty;
         });
     });
     

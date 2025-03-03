@@ -1,9 +1,31 @@
 import React from "react";
-import { Card, CardContent, Typography, Box, CardActionArea } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  CardActionArea,
+} from "@mui/material";
 import { Redeem as PresentIcon } from "@mui/icons-material";
 import { Winner } from "../types/winner";
 import { getUnclaimedPrizes } from "../utilities/raffle";
+import { useThemeContext } from "../contexts/ThemeContext";
 import { Prize } from "../types/prize";
+
+// Calculate whether to use black or white text based on background color
+const getTextColor = (bgColor: string) => {
+  // Convert hex to RGB
+  const hex = bgColor.replace('#', '');
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+  
+  // Calculate relative luminance
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  
+  // Use white text for dark backgrounds, black text for light backgrounds
+  return luminance > 0.5 ? '#000000' : '#ffffff';
+};
 
 interface RaffleWinnerProps {
   winner: Winner;
@@ -11,7 +33,7 @@ interface RaffleWinnerProps {
 }
 
 const RaffleWinnerPrizeIcon: React.FC = () => {
-  return <PresentIcon fontSize="large" color="primary" sx={{ ml: 1 }} />;
+  return <PresentIcon fontSize="large" color="inherit" sx={{ ml: 1 }} />;
 };
 
 const RaffleWinnerPrizesIcons: React.FC<{ unclaimedPrizes: Array<Prize> }> = ({
@@ -25,17 +47,23 @@ const RaffleWinnerPrizesIcons: React.FC<{ unclaimedPrizes: Array<Prize> }> = ({
 );
 
 const RaffleWinner: React.FC<RaffleWinnerProps> = ({ winner, onClick }) => {
-  // Generate present icons based on the number of unclaimed prizes
+  const { selectedTheme } = useThemeContext();
   const unclaimedPrizes = getUnclaimedPrizes(winner);
+  const textColor = getTextColor(selectedTheme.color);
 
   return (
     <Card
       sx={{
-        minWidth: 550, // Doubled from ~275
+        minWidth: 550,
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        boxShadow: 5, // Slightly increased shadow for larger card
+        boxShadow: 5,
+        bgcolor: selectedTheme.color,
+        color: textColor,
+        '& .MuiCardActionArea-root:hover': {
+          bgcolor: `${selectedTheme.color}ee`
+        }
       }}
     >
       <CardActionArea
@@ -53,8 +81,8 @@ const RaffleWinner: React.FC<RaffleWinnerProps> = ({ winner, onClick }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            py: 4, // Increased padding on top and bottom
-            px: 3, // Increased padding on sides
+            py: 4,
+            px: 3,
           }}
         >
           <Box
@@ -67,7 +95,7 @@ const RaffleWinner: React.FC<RaffleWinnerProps> = ({ winner, onClick }) => {
             }}
           >
             <Typography
-              variant="h2" // Increased from h4 to h2
+              variant="h2"
               component="div"
               sx={{
                 fontWeight: "bold",
