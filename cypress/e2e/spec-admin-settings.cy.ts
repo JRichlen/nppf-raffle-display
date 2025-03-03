@@ -66,31 +66,38 @@ describe('Admin Settings Page', () => {
       cy.contains('Settings').click();
     });
 
+    it('should start with default white theme', () => {
+      cy.get('[data-testid="card-color-select"]').should('have.text', 'Default White');
+      
+      // Visit display page and verify default white color
+      cy.visit('/display');
+      cy.get('.MuiCard-root').first().should('have.css', 'background-color', 'rgb(255, 255, 255)');
+    });
+
     it('should persist theme selection to localStorage', () => {
-      // Select a theme
+      // Select Sunset Orange theme
       cy.get('[data-testid="card-color-select"]').click();
-      cy.contains('Royal Purple').click();
+      cy.contains('Sunset Orange').click();
 
       // Verify localStorage was updated
       cy.window().then(win => {
         const storedTheme = JSON.parse(win.localStorage.getItem('raffleWinnerCardTheme') || '{}');
-        expect(storedTheme.value).to.equal('purple');
-        expect(storedTheme.color).to.equal('#7b1fa2');
+        expect(storedTheme.value).to.equal('sunset');
+        expect(storedTheme.color).to.equal('#ed6c02');
       });
 
       // Reload page and verify theme persists
       cy.reload();
       cy.contains('Settings').click();
-      cy.get('[data-testid="card-color-select"]').should('have.text', 'Royal Purple');
+      cy.get('[data-testid="card-color-select"]').should('have.text', 'Sunset Orange');
     });
 
     it('should show color preview in dropdown', () => {
       cy.get('[data-testid="card-color-select"]').click();
       
       // Verify each option has a color preview box
-      cy.contains('li', 'Ocean Blue').find('div').should('have.css', 'background-color', 'rgb(25, 118, 210)');
-      cy.contains('li', 'Forest Green').find('div').should('have.css', 'background-color', 'rgb(46, 125, 50)');
-      cy.contains('li', 'Royal Purple').find('div').should('have.css', 'background-color', 'rgb(123, 31, 162)');
+      cy.contains('li', 'Default White').find('div').should('have.css', 'background-color', 'rgb(255, 255, 255)');
+      cy.contains('li', 'Sunset Orange').find('div').should('have.css', 'background-color', 'rgb(237, 108, 2)');
     });
 
     it('should apply theme color to winner cards', () => {
@@ -101,13 +108,13 @@ describe('Admin Settings Page', () => {
         });
       });
 
-      // Select a theme
+      // Select Sunset Orange theme
       cy.get('[data-testid="card-color-select"]').click();
-      cy.contains('Ruby Red').click();
+      cy.contains('Sunset Orange').click();
 
       // Go to display page and verify card color
       cy.visit('/display');
-      cy.get('.MuiCard-root').first().should('have.css', 'background-color', 'rgb(211, 47, 47)');
+      cy.get('.MuiCard-root').first().should('have.css', 'background-color', 'rgb(237, 108, 2)');
     });
   });
 });

@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import { ThemeContext, ThemeOption } from "../contexts/ThemeContext";
 
 const themeOptions: ThemeOption[] = [
-  { label: "Ocean Blue", value: "ocean", color: "#1976d2" },
-  { label: "Forest Green", value: "forest", color: "#2e7d32" },
-  { label: "Royal Purple", value: "purple", color: "#7b1fa2" },
+  { label: "Default White", value: "default", color: "#ffffff" },
   { label: "Sunset Orange", value: "sunset", color: "#ed6c02" },
-  { label: "Ruby Red", value: "ruby", color: "#d32f2f" }
 ];
 
 const THEME_STORAGE_KEY = 'raffleWinnerCardTheme';

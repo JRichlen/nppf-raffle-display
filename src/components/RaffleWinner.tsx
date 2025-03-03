@@ -50,6 +50,7 @@ const RaffleWinner: React.FC<RaffleWinnerProps> = ({ winner, onClick }) => {
   const { selectedTheme } = useThemeContext();
   const unclaimedPrizes = getUnclaimedPrizes(winner);
   const textColor = getTextColor(selectedTheme.color);
+  const isWhiteTheme = selectedTheme.value === 'default';
 
   return (
     <Card
@@ -61,8 +62,9 @@ const RaffleWinner: React.FC<RaffleWinnerProps> = ({ winner, onClick }) => {
         boxShadow: 5,
         bgcolor: selectedTheme.color,
         color: textColor,
+        border: isWhiteTheme ? '1px solid rgba(0, 0, 0, 0.12)' : 'none',
         '& .MuiCardActionArea-root:hover': {
-          bgcolor: `${selectedTheme.color}ee`
+          bgcolor: isWhiteTheme ? 'rgba(0, 0, 0, 0.04)' : `${selectedTheme.color}ee`
         }
       }}
     >
