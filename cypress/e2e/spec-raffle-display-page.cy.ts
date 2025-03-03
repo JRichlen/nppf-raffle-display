@@ -9,7 +9,7 @@ describe('Raffle Display Page', () => {
   });
 
   it('should load the raffle display page', () => {
-    cy.contains('New Perspectives Raffle');
+    cy.contains('General Raffle Winners');
     cy.get('input').should('exist');
     cy.contains('button', 'Enter').should('exist');
   });
