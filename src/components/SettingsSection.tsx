@@ -40,7 +40,7 @@ const SettingsSection: React.FC = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<{
     type: 'file' | 'sample';
-    data?: any;
+    data?: unknown;
   } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
