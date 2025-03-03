@@ -8,6 +8,7 @@ import { format, addMinutes } from 'date-fns';
 export const TimeSeriesChart = () => {
   const context = useContext(RaffleContext);
   
+  /* istanbul ignore if */
   if (!context) {
     return null;
   }

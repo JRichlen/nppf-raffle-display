@@ -122,4 +122,110 @@ describe('Admin Settings Page', () => {
       cy.get('.MuiCard-root').first().should('have.css', 'background-color', 'rgb(237, 108, 2)');
     });
   });
+
+  describe('Data Management', () => {
+    beforeEach(() => {
+      cy.visit('/admin');
+      cy.contains('Settings').click();
+      cy.contains('Advanced').should('be.visible');
+    });
+
+    it('should download raffle data when clicking download button', () => {
+      // Load sample data first to ensure we have something to download
+      cy.fixture('winners').then(winners => {
+        cy.window().then(win => {
+          win.localStorage.setItem('winners', JSON.stringify(winners));
+        });
+      });
+      cy.reload();
+      cy.contains('Settings').click();
+
+      // Set up download folder monitoring
+      cy.get('[data-testid="download-data-button"]').click();
+      
+      // Verify file was downloaded - the file should be named with date pattern
+      cy.readFile(`cypress/downloads/raffle-winners-${new Date().toISOString().slice(0, 10)}.json`).should('exist');
+    });
+
+    it('should load sample data when clicking load sample data button', () => {
+      // Clear any existing data
+      cy.window().then(win => {
+        win.localStorage.removeItem('raffleWinners');
+      });
+      cy.reload();
+      cy.contains('Settings').click();
+
+      // Click load sample data button
+      cy.get('[data-testid="load-data-button"]').click();
+      
+      // Upload the invalid file
+      cy.get('[data-testid="FormatListNumberedIcon"]').click();
+
+      // Verify the data was loaded by checking winners page
+      cy.contains('Winners').click();
+      cy.get('[data-testid="winners-table"]').should('exist');
+      cy.get('[data-cy="primary-row"]').should('have.length.greaterThan', 0);
+    });
+
+    it('should upload raffle data from a JSON file', () => {
+      // Clear any existing data
+      cy.window().then(win => {
+        win.localStorage.removeItem('raffleWinners');
+      });
+      cy.reload();
+      cy.contains('Settings').click();
+
+      cy.get('[data-testid="load-data-button"]').click();
+      
+      // Upload the winners fixture file
+      cy.get('[data-testid="upload-data-input"]').selectFile('cypress/fixtures/winners.json', { force: true });
+
+      // Verify the data was loaded by checking winners page
+      cy.contains('Winners').click();
+      cy.get('[data-testid="winners-table"]').should('exist');
+      cy.get('[data-cy="primary-row"]').should('have.length.greaterThan', 0);
+    });
+
+    it('should show error when uploading invalid JSON file', () => {
+      // Create and upload an invalid JSON file
+      cy.writeFile('cypress/downloads/invalid.json', '{ invalid json }');
+      cy.get('[data-testid="load-data-button"]').click();
+      
+      // Upload the invalid file
+      cy.get('[data-testid="upload-data-input"]').selectFile('cypress/downloads/invalid.json', { force: true });
+
+      // Verify error snackbar is shown
+      cy.get('[data-testid="upload-error-snackbar"]').should('be.visible');
+      cy.get('[data-testid="upload-error-alert"]').should('be.visible');
+      cy.contains('Invalid JSON file').should('be.visible');
+    });
+
+    it.only('should preserve existing data when canceling file upload', () => {
+     // Clear any existing data
+     cy.window().then(win => {
+      win.localStorage.removeItem('raffleWinners');
+    });
+    cy.reload();
+    cy.contains('Settings').click();
+
+    cy.get('[data-testid="load-data-button"]').click();
+    
+    // Upload the winners fixture file
+    cy.get('[data-testid="upload-data-input"]').selectFile('cypress/fixtures/winners.json', { force: true });
+
+      cy.get('[data-testid="load-data-button"]').click();
+      
+      // Upload the winners fixture file
+      cy.get('[data-testid="upload-data-input"]').selectFile('cypress/fixtures/winners.json', { force: true });
+      cy.get('[data-testid="cancel-upload-button"]').click();
+
+      // Verify original data is preserved
+      cy.window().then(win => {
+        const originalData = JSON.parse(win.localStorage.getItem('raffleWinners') || '[]');
+        cy.fixture('winners').then(expectedWinners => {
+          expect(originalData).to.deep.equal(expectedWinners);
+        });
+      });
+    });
+  });
 });

@@ -18,7 +18,8 @@ import {
   CardContent,
   CardActionArea,
   IconButton,
-  Alert
+  Alert,
+  Snackbar
 } from "@mui/material";
 import { 
   UploadFile as UploadIcon, 
@@ -32,6 +33,9 @@ import { useThemeContext } from "../contexts/ThemeContext";
 import { useRaffleWinners } from "../hooks/useRaffleWinners";
 import sampleData from "../data/sampleData.json";
 import { WinnersList } from "../classes/winnersList";
+import { PrizeList } from "../classes/prizesList";
+import { ClaimList } from "../classes/claimsList";
+import { Winner } from "../types/winner";
 
 const SettingsSection: React.FC = () => {
   const { selectedTheme, setSelectedTheme, themeOptions } = useThemeContext();
@@ -40,9 +44,21 @@ const SettingsSection: React.FC = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<{
     type: 'file' | 'sample';
-    data?: unknown;
+    data?: Winner[];
   } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // Add states for error snackbar
+  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const transformData = (data: any[]): Winner[] => {
+    return data.map(winner => ({
+      id: winner.id,
+      name: winner.name,
+      prizes: new PrizeList(...(winner.prizes || [])),
+      claims: new ClaimList(...(winner.claims || []))
+    }));
+  };
 
   const handleDownloadData = () => {
     // Create a blob with the winners data
@@ -76,7 +92,8 @@ const SettingsSection: React.FC = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
-          const data = JSON.parse(e.target?.result as string);
+          const rawData = JSON.parse(e.target?.result as string);
+          const data = transformData(rawData);
           if (hasExistingWinners()) {
             setPendingAction({ type: 'file', data });
             setConfirmDialogOpen(true);
@@ -87,11 +104,21 @@ const SettingsSection: React.FC = () => {
           }
         } catch (error) {
           console.error("Error parsing JSON file:", error);
-          alert("Invalid JSON file. Please select a valid winners data file.");
+          // Replace alert with snackbar
+          setErrorMessage("Invalid JSON file. Please select a valid winners data file.");
+          setErrorSnackbarOpen(true);
+          handleCloseLoadDialog();
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
         }
       };
       reader.readAsText(file);
     }
+  };
+
+  const handleCloseErrorSnackbar = () => {
+    setErrorSnackbarOpen(false);
   };
 
   const handleLoadSampleData = () => {
@@ -100,7 +127,8 @@ const SettingsSection: React.FC = () => {
       setConfirmDialogOpen(true);
       setLoadDialogOpen(false);
     } else {
-      setWinners(new WinnersList(sampleData));
+      const transformedData = transformData(sampleData);
+      setWinners(new WinnersList(transformedData));
       handleCloseLoadDialog();
     }
   };
@@ -115,7 +143,8 @@ const SettingsSection: React.FC = () => {
       if (pendingAction.type === 'file' && pendingAction.data) {
         setWinners(new WinnersList(pendingAction.data));
       } else if (pendingAction.type === 'sample') {
-        setWinners(new WinnersList(sampleData));
+        const transformedData = transformData(sampleData);
+        setWinners(new WinnersList(transformedData));
       }
       setConfirmDialogOpen(false);
       setPendingAction(null);
@@ -216,7 +245,26 @@ const SettingsSection: React.FC = () => {
         style={{ display: 'none' }}
         accept=".json"
         onChange={handleFileUpload}
+        data-testid="upload-data-input"
       />
+
+      {/* Error Snackbar */}
+      <Snackbar
+        open={errorSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseErrorSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        data-testid="upload-error-snackbar"
+      >
+        <Alert 
+          onClose={handleCloseErrorSnackbar} 
+          severity="error" 
+          sx={{ width: '100%' }}
+          data-testid="upload-error-alert"
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
 
       {/* Load Data Dialog */}
       <Dialog
@@ -330,7 +378,11 @@ const SettingsSection: React.FC = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelLoad} color="primary">
+          <Button 
+            onClick={handleCancelLoad} 
+            color="primary"
+            data-testid="cancel-upload-button"
+          >
             Cancel
           </Button>
           <Button 
