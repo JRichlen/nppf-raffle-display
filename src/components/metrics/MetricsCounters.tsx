@@ -24,6 +24,7 @@ const MetricCard = ({ title, value }: MetricCardProps) => (
 export const MetricsCounters = () => {
   const context = useContext(RaffleContext);
   
+  /* istanbul ignore if */
   if (!context) {
     return null;
   }

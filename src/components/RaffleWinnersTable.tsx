@@ -92,7 +92,7 @@ const RaffleWinnersTable: React.FC = () => {
       />
 
       <TableContainer component={Paper}>
-        <Table>
+        <Table data-testid="winners-table">
           <TableHead>
             <TableRow>
               <TableCell />
