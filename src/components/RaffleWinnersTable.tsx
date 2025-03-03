@@ -7,12 +7,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Box,
   TableSortLabel,
 } from "@mui/material";
 import { useRaffleWinners } from "../hooks/useRaffleWinners";
 import RaffleWinnerTableRow from "./RaffleWinnerTableRow";
-import RaffleWinnersResetButton from "./RaffleWinnersResetButton";
 import RaffleWinnersTableSearch, {
   StatusFilter,
 } from "./RaffleWinnersTableSearch";
@@ -86,10 +84,6 @@ const RaffleWinnersTable: React.FC = () => {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-        <RaffleWinnersResetButton />
-      </Box>
-
       <RaffleWinnersTableSearch
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
