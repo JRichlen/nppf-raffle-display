@@ -200,7 +200,7 @@ describe('Admin Settings Page', () => {
       cy.contains('Invalid JSON file').should('be.visible');
     });
 
-    it.only('should preserve existing data when canceling file upload', () => {
+    it('should preserve existing data when canceling file upload', () => {
      // Clear any existing data
      cy.window().then(win => {
       win.localStorage.removeItem('raffleWinners');
