@@ -20,8 +20,7 @@ const RaffleWinnersGrid: React.FC<WinnersGridProps> = () => {
     const count = winners.length;
     if (count <= 3) return 12; // 1 per row for 1-3 winners
     if (count <= 6) return 6;  // 2 per row for 4-6 winners
-    if (count <= 12) return 4; // 3 per row for 7-12 winners
-    return 3; // 4 per row for 13+ winners
+    return 4; // 3 per row for 7+ winners (never allow 4 per row)
   }, [winners.length]);
 
   const gridSize = getGridSize();
