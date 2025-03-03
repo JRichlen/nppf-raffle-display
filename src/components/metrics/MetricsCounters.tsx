@@ -9,12 +9,12 @@ interface MetricCardProps {
 }
 
 const MetricCard = ({ title, value }: MetricCardProps) => (
-  <Card sx={{ height: '100%' }}>
+  <Card sx={{ height: '100%' }} data-cy={`metric-card-${title.toLowerCase().replace(/\s+/g, '-')}`}>
     <CardContent>
-      <Typography color="textSecondary" gutterBottom variant="h6" component="div">
+      <Typography color="textSecondary" gutterBottom variant="h6" component="div" data-cy="metric-title">
         {title}
       </Typography>
-      <Typography variant="h3" component="div">
+      <Typography variant="h3" component="div" data-cy="metric-value">
         {value}
       </Typography>
     </CardContent>
@@ -38,7 +38,7 @@ export const MetricsCounters = () => {
   ];
 
   return (
-    <Box sx={{ mb: 4 }}>
+    <Box sx={{ mb: 4 }} data-cy="metrics-counters">
       <Grid container spacing={3}>
         {metrics.map((metric) => (
           <Grid key={metric.title} item xs={12} sm={6} md={3}>

@@ -51,7 +51,6 @@ describe('Raffle Admin Page', () => {
     it('should display the metrics dashboard section', () => {
         cy.contains('Metrics').click();
         cy.contains('Raffle Metrics Dashboard').should('be.visible');
-        cy.contains('Metrics dashboard content will be displayed here').should('be.visible');
     });
     
     // New test for Settings section content
