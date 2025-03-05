@@ -7,7 +7,7 @@ describe('Raffle Metrics Dashboard', () => {
     cy.fixture('winners').then((winners) => {
       cy.setLocalStorage('raffleWinners', JSON.stringify(winners));
     });
-        
+
     // Visit admin page and navigate to metrics
     cy.visit('/admin');
     cy.get('[data-cy=nav-Metrics]').click();
@@ -24,7 +24,7 @@ describe('Raffle Metrics Dashboard', () => {
     cy.get('[data-cy=metric-card-total-claims]').should('be.visible');
     cy.get('[data-cy=metric-card-unclaimed-prizes]').should('be.visible');
     cy.get('[data-cy=metric-card-unique-winners]').should('be.visible');
-    
+
     // Check that all advanced metric cards are present and visible
     cy.get('[data-cy=metric-card-avg-time-to-claim]').should('be.visible');
     cy.get('[data-cy=metric-card-median-time-to-claim]').should('be.visible');
@@ -35,7 +35,7 @@ describe('Raffle Metrics Dashboard', () => {
 
     // Verify that each card has a title
     cy.get('[data-cy=metric-title]').should('have.length', 10);
-    
+
     // Verify that each card has a value
     cy.get('[data-cy=metric-value]').should('have.length', 10);
   });
@@ -46,7 +46,7 @@ describe('Raffle Metrics Dashboard', () => {
       const totalPrizes = winners.reduce((sum, winner) => sum + winner.prizes.length, 0);
       const totalClaims = winners.reduce((sum, winner) => sum + (winner.claims?.length || 0), 0);
       const uniqueWinners = new Set(winners.map(w => w.id)).size;
-      
+
       // Calculate unclaimed prizes
       const totalClaimedPrizes = winners.reduce((sum, winner) => {
         const claimedPrizeIds = winner.claims?.flatMap(c => c.prizeIds) || [];
@@ -67,45 +67,43 @@ describe('Raffle Metrics Dashboard', () => {
   });
 
   it('should calculate advanced metrics correctly based on raffle data', () => {
-    cy.fixture('winners').then((winners) => {
-      // Check that claim rate is displayed as a percentage
-      cy.get('[data-cy=metric-card-claim-rate]').find('[data-cy=metric-value]')
-        .invoke('text')
-        .should('match', /\d+%/);
-      
-      // Check that claims by source shows the display/admin format
-      cy.get('[data-cy=metric-card-claims-by-source]').find('[data-cy=metric-value]')
-        .invoke('text')
-        .should('match', /\d+ \/ \d+/);
-      cy.get('[data-cy=metric-card-claims-by-source]').find('[data-cy=metric-subtitle]')
-        .should('contain', 'Display / Admin');
-      
-      // Time metrics should show appropriate time formats
-      cy.get('[data-cy=metric-card-avg-time-to-claim]').find('[data-cy=metric-value]')
-        .invoke('text')
-        .then(text => {
-          // Should either contain "seconds", "minutes", "h m", or "N/A"
-          expect(text).to.match(/(\d+ seconds|\d+ minutes|\d+h \d+m|N\/A)/);
-        });
-      
-      cy.get('[data-cy=metric-card-median-time-to-claim]').find('[data-cy=metric-value]')
-        .invoke('text')
-        .then(text => {
-          expect(text).to.match(/(\d+ seconds|\d+ minutes|\d+h \d+m|N\/A)/);
-        });
-      
-      cy.get('[data-cy=metric-card-fastest-claim]').find('[data-cy=metric-value]')
-        .invoke('text')
-        .then(text => {
-          expect(text).to.match(/(\d+ seconds|\d+ minutes|\d+h \d+m|N\/A)/);
-        });
-      
-      cy.get('[data-cy=metric-card-slowest-claim]').find('[data-cy=metric-value]')
-        .invoke('text')
-        .then(text => {
-          expect(text).to.match(/(\d+ seconds|\d+ minutes|\d+h \d+m|N\/A)/);
-        });
-    });
+    // Check that claim rate is displayed as a percentage
+    cy.get('[data-cy=metric-card-claim-rate]').find('[data-cy=metric-value]')
+      .invoke('text')
+      .should('match', /\d+%/);
+
+    // Check that claims by source shows the display/admin format
+    cy.get('[data-cy=metric-card-claims-by-source]').find('[data-cy=metric-value]')
+      .invoke('text')
+      .should('match', /\d+ \/ \d+/);
+    cy.get('[data-cy=metric-card-claims-by-source]').find('[data-cy=metric-subtitle]')
+      .should('contain', 'Display / Admin');
+
+    // Time metrics should show appropriate time formats
+    cy.get('[data-cy=metric-card-avg-time-to-claim]').find('[data-cy=metric-value]')
+      .invoke('text')
+      .then(text => {
+        // Should either contain "seconds", "minutes", "h m", or "N/A"
+        expect(text).to.match(/(\d+ seconds|\d+ minutes|\d+h \d+m|N\/A)/);
+      });
+
+    cy.get('[data-cy=metric-card-median-time-to-claim]').find('[data-cy=metric-value]')
+      .invoke('text')
+      .then(text => {
+        expect(text).to.match(/(\d+ seconds|\d+ minutes|\d+h \d+m|N\/A)/);
+      });
+
+    cy.get('[data-cy=metric-card-fastest-claim]').find('[data-cy=metric-value]')
+      .invoke('text')
+      .then(text => {
+        expect(text).to.match(/(\d+ seconds|\d+ minutes|\d+h \d+m|N\/A)/);
+      });
+
+    cy.get('[data-cy=metric-card-slowest-claim]').find('[data-cy=metric-value]')
+      .invoke('text')
+      .then(text => {
+        expect(text).to.match(/(\d+ seconds|\d+ minutes|\d+h \d+m|N\/A)/);
+      });
   });
 
   it('should display charts when data is available', () => {
@@ -114,14 +112,14 @@ describe('Raffle Metrics Dashboard', () => {
     cy.get('[data-cy=time-series-chart]').should('be.visible')
       .find('svg').should('exist')
       .find('path').should('exist');
-    
+
     // Claims by source chart (pie chart)
     cy.get('[data-cy=claims-by-source-chart]').should('exist')
       .within(() => {
         cy.contains('Claims by Source').should('be.visible');
         cy.get('svg').should('exist');
       });
-    
+
     // Time to claim distribution chart (bar chart)
     cy.get('[data-cy=time-to-claim-chart]').should('exist')
       .within(() => {
@@ -152,10 +150,10 @@ describe('Raffle Metrics Dashboard', () => {
         claims: []
       };
       winners.push(newWinner);
-      
+
       // Update localStorage
       cy.setLocalStorage('raffleWinners', JSON.stringify(winners));
-      
+
       // Refresh the page to see updates
       cy.reload();
       cy.get('[data-cy=nav-Metrics]').click();
@@ -193,10 +191,10 @@ describe('Raffle Metrics Dashboard', () => {
     // Charts should show the "no data" messages
     cy.get('[data-cy=time-series-chart]').should('exist')
       .contains('No raffle data available').should('be.visible');
-    
+
     cy.get('[data-cy=claims-by-source-chart]').should('exist')
       .contains('No claim data available').should('be.visible');
-    
+
     cy.get('[data-cy=time-to-claim-chart]').should('exist')
       .contains('No claim data available').should('be.visible');
   });
@@ -206,16 +204,16 @@ describe('Raffle Metrics Dashboard', () => {
     cy.get('[data-cy=nav-Winners]').click();
     cy.url().should('include', '/admin');
     cy.get('[data-cy=winners-section]').should('exist');
-    
+
     // Navigate back to Metrics
     cy.get('[data-cy=nav-Metrics]').click();
     cy.get('[data-cy=metrics-counters]').should('be.visible');
-    
+
     // Navigate to Settings
     cy.get('[data-cy=nav-Settings]').click();
     cy.url().should('include', '/admin');
     cy.get('[data-cy=settings-section]').should('exist');
-    
+
     // Navigate back to Metrics
     cy.get('[data-cy=nav-Metrics]').click();
     cy.get('[data-cy=metrics-counters]').should('be.visible');
