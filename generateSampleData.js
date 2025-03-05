@@ -8,8 +8,16 @@ const { v4: uuidv4 } = require('uuid');
 // Configuration
 const NUM_WINNERS = 135;
 const MIN_CLAIMS = 240;
-const BASE_DATE = new Date('2023-08-30T19:30:00.000Z'); // 7:30 PM
-const END_DATE = new Date('2023-08-30T21:30:00.000Z');  // 9:30 PM
+
+// Calculate yesterday's date (7:30 PM to 9:30 PM)
+const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+yesterday.setHours(19, 30, 0, 0);
+const BASE_DATE = yesterday; // 7:30 PM yesterday
+const END_DATE = new Date(yesterday);
+END_DATE.setHours(21, 30, 0, 0); // 9:30 PM yesterday
+
+console.log(`Generating sample data for: ${BASE_DATE.toISOString()} to ${END_DATE.toISOString()}`);
 
 // Sample data storage
 const winners = [];
