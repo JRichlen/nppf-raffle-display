@@ -4,7 +4,7 @@ import RaffleWinnersTable from "./RaffleWinnersTable";
 
 const WinnersSection: React.FC = () => {
   return (
-    <Box sx={{ my: 4 }}>
+    <Box sx={{ my: 4 }} data-cy="winners-section">
       <Typography variant="h5" component="h2" gutterBottom>
         Raffle Winners
       </Typography>

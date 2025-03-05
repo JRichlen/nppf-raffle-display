@@ -190,7 +190,7 @@ const SettingsSection: React.FC = () => {
   };
 
   return (
-    <Box sx={{ my: 4 }}>
+    <Box sx={{ my: 4 }} data-cy="settings-section">
       <Typography variant="h5" component="h2" gutterBottom>
         Raffle Settings
       </Typography>

@@ -20,7 +20,7 @@ export const ClaimsBySourceChart = () => {
   
   if (totalClaims === 0) {
     return (
-      <Card>
+      <Card data-cy="claims-by-source-chart">
         <CardContent>
           <Typography>No claim data available</Typography>
         </CardContent>

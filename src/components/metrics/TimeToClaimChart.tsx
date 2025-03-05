@@ -32,7 +32,7 @@ export const TimeToClaimChart = () => {
 
   if (claimTimes.length === 0) {
     return (
-      <Card>
+      <Card data-cy="time-to-claim-chart">
         <CardContent>
           <Typography>No claim data available</Typography>
         </CardContent>

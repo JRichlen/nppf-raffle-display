@@ -17,7 +17,7 @@ export const TimeSeriesChart = () => {
 
   if (timeSeriesData.length === 0) {
     return (
-      <Card>
+      <Card data-cy="time-series-chart">
         <CardContent>
           <Typography>No raffle data available</Typography>
         </CardContent>
@@ -57,7 +57,7 @@ export const TimeSeriesChart = () => {
   }
 
   return (
-    <Card>
+    <Card data-cy="time-series-chart">
       <CardContent>
         <Typography variant="h6" gutterBottom>
           Prizes and Claims Over Time
