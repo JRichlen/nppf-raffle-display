@@ -29,15 +29,31 @@ export const TimeSeriesChart = () => {
   const prizesSeries = timeSeriesData.map(point => point.prizes);
   const claimsSeries = timeSeriesData.map(point => point.claims);
 
-  // Calculate tick values for every 30 minutes
+  // Calculate tick values with safety limits
   const startTime = Math.min(...xAxisData);
   const endTime = Math.max(...xAxisData);
+  
+  // Calculate appropriate tick interval based on time range
+  const timeRangeMinutes = (endTime - startTime) / (1000 * 60); // time range in minutes
+  
+  // Adjust interval based on time range to avoid too many ticks
+  let tickIntervalMinutes = 30; // default is 30 minutes
+  if (timeRangeMinutes > 720) { // more than 12 hours
+    tickIntervalMinutes = 120; // 2 hours
+  } else if (timeRangeMinutes > 360) { // more than 6 hours
+    tickIntervalMinutes = 60; // 1 hour
+  }
+  
+  // Generate limited number of tick values (max 20)
   const tickValues: number[] = [];
   let currentTime = new Date(startTime);
+  let tickCount = 0;
+  const MAX_TICKS = 20;
   
-  while (currentTime.getTime() <= endTime) {
+  while (currentTime.getTime() <= endTime && tickCount < MAX_TICKS) {
     tickValues.push(currentTime.getTime());
-    currentTime = addMinutes(currentTime, 30);
+    currentTime = addMinutes(currentTime, tickIntervalMinutes);
+    tickCount++;
   }
 
   return (
@@ -70,7 +86,7 @@ export const TimeSeriesChart = () => {
             {
               data: xAxisData,
               scaleType: 'time',
-              tickMinStep: 30 * 60 * 1000, // 30 minutes in milliseconds
+              tickMinStep: tickIntervalMinutes * 60 * 1000, // Convert minutes to milliseconds
               valueFormatter: (value) => format(value, 'HH:mm'),
             },
           ]}

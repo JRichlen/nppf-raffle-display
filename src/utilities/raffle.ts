@@ -1,5 +1,6 @@
 import { Winner } from "../types/winner";
 import { Prize } from "../types/prize";
+import { Claim, ClaimSource } from "../types/claim";
 
 // Cache for getUnclaimedPrizes results
 const unclaimedPrizesCache = new Map<string, Array<Prize>>();
@@ -113,4 +114,142 @@ export function getCumulativeTimeSeriesData(winners: Array<Winner>): TimeSeriesD
       claims: cumulativeClaims
     };
   });
+}
+
+/**
+ * Returns the average time (in minutes) between winning a prize and claiming it
+ */
+export function getAverageTimeToClaim(winners: Array<Winner>): number {
+  const claimTimes: number[] = [];
+  
+  winners.forEach(winner => {
+    winner.claims.forEach(claim => {
+      claim.prizeIds.forEach(prizeId => {
+        const prize = winner.prizes.find(p => p.id === prizeId);
+        if (prize) {
+          const prizeTime = new Date(prize.timestamp).getTime();
+          const claimTime = new Date(claim.timestamp).getTime();
+          const timeDiffMinutes = (claimTime - prizeTime) / (1000 * 60);
+          claimTimes.push(timeDiffMinutes);
+        }
+      });
+    });
+  });
+  
+  if (claimTimes.length === 0) return 0;
+  
+  return claimTimes.reduce((sum, time) => sum + time, 0) / claimTimes.length;
+}
+
+/**
+ * Returns the median time (in minutes) between winning a prize and claiming it
+ */
+export function getMedianTimeToClaim(winners: Array<Winner>): number {
+  const claimTimes: number[] = [];
+  
+  winners.forEach(winner => {
+    winner.claims.forEach(claim => {
+      claim.prizeIds.forEach(prizeId => {
+        const prize = winner.prizes.find(p => p.id === prizeId);
+        if (prize) {
+          const prizeTime = new Date(prize.timestamp).getTime();
+          const claimTime = new Date(claim.timestamp).getTime();
+          const timeDiffMinutes = (claimTime - prizeTime) / (1000 * 60);
+          claimTimes.push(timeDiffMinutes);
+        }
+      });
+    });
+  });
+  
+  if (claimTimes.length === 0) return 0;
+  
+  const sortedTimes = [...claimTimes].sort((a, b) => a - b);
+  const middle = Math.floor(sortedTimes.length / 2);
+  
+  if (sortedTimes.length % 2 === 0) {
+    return (sortedTimes[middle - 1] + sortedTimes[middle]) / 2;
+  } else {
+    return sortedTimes[middle];
+  }
+}
+
+/**
+ * Returns the claim rate as a percentage (0-100) of prizes that have been claimed
+ */
+export function getClaimRate(winners: Array<Winner>): number {
+  const totalPrizes = getTotalPrizes(winners);
+  if (totalPrizes === 0) return 0;
+  
+  const totalClaims = getTotalClaims(winners);
+  return (totalClaims / totalPrizes) * 100;
+}
+
+/**
+ * Returns counts of claims by source (DISPLAY vs ADMIN)
+ */
+export function getClaimsBySource(winners: Array<Winner>): Record<ClaimSource, number> {
+  const result: Record<ClaimSource, number> = {
+    [ClaimSource.DISPLAY]: 0,
+    [ClaimSource.ADMIN]: 0
+  };
+  
+  winners.forEach(winner => {
+    winner.claims.forEach(claim => {
+      result[claim.source] += claim.prizeIds.length;
+    });
+  });
+  
+  return result;
+}
+
+/**
+ * Returns the fastest claim time in minutes
+ */
+export function getFastestClaimTime(winners: Array<Winner>): number | null {
+  let fastestTime: number | null = null;
+  
+  winners.forEach(winner => {
+    winner.claims.forEach(claim => {
+      claim.prizeIds.forEach(prizeId => {
+        const prize = winner.prizes.find(p => p.id === prizeId);
+        if (prize) {
+          const prizeTime = new Date(prize.timestamp).getTime();
+          const claimTime = new Date(claim.timestamp).getTime();
+          const timeDiffMinutes = (claimTime - prizeTime) / (1000 * 60);
+          
+          if (fastestTime === null || timeDiffMinutes < fastestTime) {
+            fastestTime = timeDiffMinutes;
+          }
+        }
+      });
+    });
+  });
+  
+  return fastestTime;
+}
+
+/**
+ * Returns the slowest claim time in minutes
+ */
+export function getSlowestClaimTime(winners: Array<Winner>): number | null {
+  let slowestTime: number | null = null;
+  
+  winners.forEach(winner => {
+    winner.claims.forEach(claim => {
+      claim.prizeIds.forEach(prizeId => {
+        const prize = winner.prizes.find(p => p.id === prizeId);
+        if (prize) {
+          const prizeTime = new Date(prize.timestamp).getTime();
+          const claimTime = new Date(claim.timestamp).getTime();
+          const timeDiffMinutes = (claimTime - prizeTime) / (1000 * 60);
+          
+          if (slowestTime === null || timeDiffMinutes > slowestTime) {
+            slowestTime = timeDiffMinutes;
+          }
+        }
+      });
+    });
+  });
+  
+  return slowestTime;
 }
