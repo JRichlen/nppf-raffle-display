@@ -1,6 +1,6 @@
 import { Winner } from "../types/winner";
 import { Prize } from "../types/prize";
-import { Claim, ClaimSource } from "../types/claim";
+import { ClaimSource } from "../types/claim";
 
 // Cache for getUnclaimedPrizes results
 const unclaimedPrizesCache = new Map<string, Array<Prize>>();
